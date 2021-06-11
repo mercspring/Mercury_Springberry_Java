@@ -12,13 +12,32 @@ servers:
   - url: 'http://localhost:8080'
     description: Inferred Url
 tags:
+  - name: definition-controller
+    description: Definition Controller
   - name: eight-ball-controller
     description: Eight Ball Controller
   - name: quote-controller
     description: Quote Controller
-  - name: word-controller
-    description: Word Controller
 paths:
+  /word:
+    get:
+      tags:
+        - definition-controller
+      summary: getRandomWordAndDefinition
+      operationId: getRandomWordAndDefinitionUsingGET
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Definition'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
   /magic:
     post:
       tags:
@@ -64,25 +83,6 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
-  /word:
-    get:
-      tags:
-        - word-controller
-      summary: getRandomWordAndDefinition
-      operationId: getRandomWordAndDefinitionUsingGET
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Word'
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
-        '404':
-          description: Not Found
 components:
   schemas:
     Answer:
@@ -95,6 +95,17 @@ components:
           type: integer
           format: int32
         question:
+          type: string
+    Definition:
+      title: Definition
+      type: object
+      properties:
+        definition:
+          type: string
+        id:
+          type: integer
+          format: int32
+        word:
           type: string
     Question:
       title: Question
@@ -113,15 +124,4 @@ components:
           type: integer
           format: int32
         quote:
-          type: string
-    Word:
-      title: Word
-      type: object
-      properties:
-        definition:
-          type: string
-        id:
-          type: integer
-          format: int32
-        word:
           type: string
